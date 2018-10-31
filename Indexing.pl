@@ -43,9 +43,8 @@ print @results;
 return @results;
 }
 
-sub searchFileReqular{
-	
-	
+sub searchFileRegular{
+		
 	}
 
 sub Index{
@@ -59,8 +58,11 @@ my %results;
 my $i = 1;
 local $/ = ' ';
 while(my $word = <$File>){
-	$results{$word} = $i++;
+	push(@{$results{$word}}, $i++);
 }
-print %results;
+use feature 'say';
+for my $phrase (keys %results){
+	print "$phrase : @{ $results{$phrase} } \n";
+	} 
 return %results;
 }
