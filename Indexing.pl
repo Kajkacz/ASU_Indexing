@@ -14,7 +14,7 @@ $Mw->Label(-text => 'Indexer')->pack();
 
 $Mw->Button(-text=>"Close", -command =>sub{exit})->pack();
 $Mw->Button(-text=>"Search Exact", -command =>sub{&searchFileExact})->pack();
-$Mw->Button(-text=>"Search Regular Expression", -command =>sub{&searchFileRegular})->pack();
+$Mw->Button(-text=>"Search Regular Expression", -command =>sub{&searchFileRegular($Mw )})->pack();
 $Mw->Button(-text=>"Index", -command =>sub{&Index})->pack();
 
 my $filePathEntry = $Mw->Entry(-text=>"Test.txt" )->pack(); #/home/Kajkaz/Dokumenty/ASU_Projekt/
@@ -44,7 +44,38 @@ return @results;
 }
 
 sub searchFileRegular{
-		
+	
+my $filePath = $filePathEntry->get();
+print("Path of file to open : " ,$filePath, "\n");
+
+open(my $File, '<:encoding(UTF-8)',$filePath)
+	or die"Could not open file '$filePath' $!";
+my $phrase = $phraseToSearch->get();
+
+my @results;
+my $i = 1;
+local $/ = ' ';
+
+while(my $word = <$File>){
+	if($word =~ /$phrase/){
+		push(@results,$i);
+		}
+	$i++;
+}
+print @results , " ";
+print "\n";
+my $Mv = shift;
+my $dialog = $Mv->Dialog(
+	-title => "Result",
+	-text => @results);
+			
+$dialog->Popup(qw/
+    -popover    => $Mv,
+    -overanchor => c ,
+    -popanchor  => c ,
+/);
+return @results;
+
 	}
 
 sub Index{
