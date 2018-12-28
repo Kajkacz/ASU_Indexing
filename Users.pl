@@ -9,14 +9,14 @@ my $buttonWidth = 30;
 my $buttonHeight = 20;
 my $Mw = MainWindow->new;
 
-&getStartWindow;
+getStartWindow;
 
 MainLoop;
 sub deleteUser{
 	my $UID = shift;
 	my $username = 	getpwuid($UID);
 	my $deluser = '/usr/sbin/deluser';
-	my $cmd = qq(sudo $deluser $username);
+	my $cmd = qq($deluser $username);
   system $cmd;
 }
 sub createUser{
@@ -81,8 +81,8 @@ sub listUsersPage{
 	}
 	my $uid;
 	$Mw->Label(-text=>"Delete User with provided UID")->grid();
-	$Mw->Button(-text=>"Delete user" ,-command=>sub{&deleteUser($uid)} ,-width => 15)->grid($Mw->Entry(-textvariable=> \$uid ));
-	$Mw->Button(-text=>"Back to Main Menu", -command =>sub{&getStartWindow})->grid(	$Mw->Button(-text=>"Refresh", -command =>sub{&listUsersPage}));
+	$Mw->Button(-text=>"Delete user" ,-command=>sub{deleteUser($uid)} ,-width => 15)->grid($Mw->Entry(-textvariable=> \$uid ));
+	$Mw->Button(-text=>"Back to Main Menu", -command =>sub{getStartWindow})->grid(	$Mw->Button(-text=>"Refresh", -command =>sub{listUsersPage}));
 	endpwent(  );
 }
 
@@ -99,19 +99,19 @@ sub createUserPage{
 	$Mw->geometry("500x300");
 	$Mw->title("Create User");
 
-	my $uid = &getFreeUID;
-	my $uspasswd = &randomizePassword;
+	my $uid = getFreeUID;
+	my $uspasswd = randomizePassword;
 	my $usname = 'UsernameHere';
 
 	my $username = $Mw->Entry(-textvariable=> \$usname )->grid($Mw->Label(-text => 'Username'));
 	my $UID = $Mw->Entry(-textvariable=> \$uid )->grid($Mw->Label(-text => 'UID'));
 	my $password = $Mw ->Entry(-textvariable=> \$uspasswd)->grid($Mw->Label(-text => 'Password'));
 
-	$Mw->Button(-text=>"Create User", -command =>sub{&createUser($uid,$usname,$uspasswd)},-width => $buttonWidth)->grid();
-	$Mw->Button(-text=>"Check If UID is free", -command =>sub{&checkUID($uid)},-width => $buttonWidth)->grid();
-	$Mw->Button(-text=>"Get Random Password", -command =>sub{$uspasswd = &randomizePassword},-width => $buttonWidth)->grid();
+	$Mw->Button(-text=>"Create User", -command =>sub{createUser($uid,$usname,$uspasswd)},-width => $buttonWidth)->grid();
+	$Mw->Button(-text=>"Check If UID is free", -command =>sub{checkUID($uid)},-width => $buttonWidth)->grid();
+	$Mw->Button(-text=>"Get Random Password", -command =>sub{$uspasswd = randomizePassword},-width => $buttonWidth)->grid();
 
-	$Mw->Button(-text=>"Back to Main Menu", -command =>sub{&getStartWindow},-width => $buttonWidth)->grid();
+	$Mw->Button(-text=>"Back to Main Menu", -command =>sub{getStartWindow},-width => $buttonWidth)->grid();
 
 }
 
@@ -146,10 +146,10 @@ sub myCredentialsPage{
 	my $shellButton =$Mw->Label(-text => 'My Shell')->grid( $Mw ->Label(-textvariable=> \$oldshell), $Mw ->Entry(-textvariable=> \$newshell));
 	my $gtoupButton =$Mw->Label(-text => 'My Group')->grid( $Mw ->Label(-textvariable=> \$groupName), $Mw ->Label(-textvariable=> \$gid));
 
-	$Mw->Button(-text=>"Save My Credentials", -command =>sub{&saveCredentials},-width => $buttonWidth)->grid();
-	$Mw->Button(-text=>"Get Random Password", -command =>sub{$newpasswd = &randomizePassword},-width => $buttonWidth)->grid();
+	$Mw->Button(-text=>"Save My Credentials", -command =>sub{saveCredentials},-width => $buttonWidth)->grid();
+	$Mw->Button(-text=>"Get Random Password", -command =>sub{$newpasswd = randomizePassword},-width => $buttonWidth)->grid();
 
-	$Mw->Button(-text=>"Back to Main Menu", -command =>sub{&getStartWindow},-width => $buttonWidth)->grid();
+	$Mw->Button(-text=>"Back to Main Menu", -command =>sub{getStartWindow},-width => $buttonWidth)->grid();
 }
 sub copyPage{
 	$Mw->destroy;
@@ -159,7 +159,7 @@ sub copyPage{
 
 
 
-	$Mw->Button(-text=>"Back to Main Menu", -command =>sub{&getStartWindow})->grid();
+	$Mw->Button(-text=>"Back to Main Menu", -command =>sub{getStartWindow})->grid();
 
 }
 sub getStartWindow{
@@ -170,10 +170,10 @@ sub getStartWindow{
 
 	$Mw->Label(-text => 'Administration')->pack();
 
-	$Mw->Button(-text=>"Create User", -command =>sub{&createUserPage} ,-width => $buttonWidth)->pack();
-	$Mw->Button(-text=>"List and delete the users", -command =>sub{&listUsersPage},-width => $buttonWidth)->pack();
-	$Mw->Button(-text=>"Copy . files", -command =>sub{&copyPage},-width => $buttonWidth)->pack();
-	$Mw->Button(-text=>"My Credentials", -command =>sub{&myCredentialsPage},-width => $buttonWidth)->pack();
+	$Mw->Button(-text=>"Create User", -command =>sub{createUserPage} ,-width => $buttonWidth)->pack();
+	$Mw->Button(-text=>"List and delete the users", -command =>sub{listUsersPage},-width => $buttonWidth)->pack();
+	$Mw->Button(-text=>"Copy . files", -command =>sub{copyPage},-width => $buttonWidth)->pack();
+	$Mw->Button(-text=>"My Credentials", -command =>sub{myCredentialsPage},-width => $buttonWidth)->pack();
 
 
 	$Mw->Button(-text=>"Close", -command =>sub{exit})->pack();
