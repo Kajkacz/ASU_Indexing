@@ -382,6 +382,18 @@ sub saveCredentials{
 		system $changeUserInfoCmd;
 	}
 }
+sub deleteFromGroup{
+	my $username = shift;
+	my $groupname = shift;
+	my $cmd = qq(sudo /usr/sbin/deluser $username $groupname );
+	system $cmd;
+}
+sub addToGroup{
+	my $username = shift;
+	my $groupname = shift;
+	my $cmd = qq(sudo /usr/sbin/usermod -a -G  $groupname $username);
+	system $cmd;
+}
 sub getShells{
 	my $shellMenu = shift;
 	my $cmd = qq(sudo /bin/cat /etc/shells);
@@ -519,7 +531,7 @@ sub groupsPage{
 		$group =~ s/.*\://;
 		$groupMap{$grName} = $group;
 		$menuAdd->addOptions($grName);
-		if($i>30){last;}
+		if($i++>23){last;}
 	}
 	foreach my $group(@myGroups){
 		$grName = join ':', (split(':',$group))[0];
@@ -529,8 +541,8 @@ sub groupsPage{
 		$groupMap{$grName} = $group;
 		$Mw->Label(-text=>$group)->grid($Mw->Label(-text=>$grName));
 	}
-	$Mw->Button( -command =>sub{getStartWindow()},-width => $buttonWidth,-text=>"Add me to a group")->grid($menuAdd);
-	$Mw->Button( -command =>sub{getStartWindow()},-width => $buttonWidth,-text=>"Remove me from a group")->grid($menuDel);
+	$Mw->Button( -command =>sub{addToGroup($username,$groupToAdd)},-width => $buttonWidth,-text=>"Add to a group")->grid($menuAdd);
+	$Mw->Button( -command =>sub{deleteFromGroup($username,$groupToDel)},-width => $buttonWidth,-text=>"Remove from a group")->grid($menuDel);
 	$Mw->Button(-text=>"Back to Main Menu", -command =>sub{getStartWindow()},-width => $buttonWidth)->grid();
 
 }
