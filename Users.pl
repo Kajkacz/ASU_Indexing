@@ -13,11 +13,11 @@ use POSIX qw(strftime);
 my $buttonWidth = 30;
 my $buttonHeight = 20;
 my $Mw;
-our($opt_g,$opt_h,$opt_d,$opt_u,$opt_p,$opt_i,$opt_v,$opt_c,$opt_r);
+our($opt_g,$opt_h,$opt_d,$opt_u,$opt_p,$opt_i,$opt_v,$opt_r);
 my $date = strftime "%m%d%Y", localtime;
 my $logFileName = "$date" .  'Logs.txt';
 
-getopts('ghd:u:p:i:v') or die "Options error";
+getopts('ghd:u:p:i:vr') or die "Options error";
 if($opt_h && !$opt_g){
 	printHelpText();
 }
@@ -122,7 +122,7 @@ sub deleteFromGroup{
 	my $username = shift;
 	my $groupname = shift;
 	#my $cmd = qq(sudo /usr/sbin/userdel $username $groupname ); #UBUNTU
-	my $cmd= qq(sudo groupmod -R  $username $groupname );#FEDORA
+	my $cmd= qq(sudo /usr/bin/gpasswd -d $username $groupname );#FEDORA
 	print $cmd;
 	system $cmd;
 }
